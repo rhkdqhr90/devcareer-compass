@@ -3,6 +3,7 @@ package com.devcareer.compass.presentation.resume
 import com.devcareer.compass.application.common.ApiResponse
 import com.devcareer.compass.application.resume.dto.ResumeResponse
 import com.devcareer.compass.application.resume.service.ResumeService
+import com.devcareer.compass.infrastructure.ai.OllamaClient
 import com.devcareer.compass.presentation.exception.FileRequiredException
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -17,7 +18,8 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 @RequestMapping("/api/resumes")
 class ResumeController(
-    private val resumeService: ResumeService
+    private val resumeService: ResumeService,
+    private val ollamaClient: OllamaClient
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -41,6 +43,12 @@ class ResumeController(
     @GetMapping("/user/{userId}")
     fun getUserResume(@PathVariable userId: Long): ResponseEntity<ApiResponse<List<ResumeResponse>>> {
         val response = resumeService.getUserResumes(userId)
+        return ResponseEntity.ok(ApiResponse.success(response))
+    }
+
+    @GetMapping("/test-ollama")
+    fun testOllama(): ResponseEntity<ApiResponse<String>> {
+        val response = ollamaClient.chat("안녕하세요. 간단히 인사해주세요.")
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 }

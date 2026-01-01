@@ -13,7 +13,8 @@ data class ResumeResponse(
     val fileType: FileType,
     val status: ResumeStatus,
     val createdAt: LocalDateTime,
-    val parsedAt: LocalDateTime?
+    val parsedAt: LocalDateTime?,
+    val parsedDataJson: String? = null
 ){
     companion object{
         fun from(resume: Resume): ResumeResponse {
@@ -25,7 +26,8 @@ data class ResumeResponse(
                 fileType = resume.fileType,
                 status = resume.status,
                 createdAt = resume.createdAt,
-                parsedAt = resume.parsedAt
+                parsedAt = resume.parsedAt,
+                parsedDataJson = resume.parsedDataJson
             )
         }
     }

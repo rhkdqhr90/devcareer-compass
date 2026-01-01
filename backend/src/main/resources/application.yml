@@ -42,7 +42,7 @@ storage:
 
 ollama:
   base-url: http://localhost:11434
-  model: llama3.1
+  model: llama3.2:1b
   timeout: 60000
 
 logging:

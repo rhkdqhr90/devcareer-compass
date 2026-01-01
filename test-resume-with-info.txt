@@ -1,0 +1,14 @@
+이름: 이광교
+이메일: gwangkyo@example.com
+전화번호: 010-1234-5678
+
+기술 스택:
+- Java
+- Kotlin
+- Spring Boot
+- PostgreSQL
+- Docker
+
+경력:
+고향사랑e음 (2023.07 - 2024.10)
+- Spring Boot 기반 백엔드 개발
