@@ -45,7 +45,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.9")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
 
-
+    implementation("io.github.cdimascio:dotenv-java:3.0.0")
 }
 
 kotlin {

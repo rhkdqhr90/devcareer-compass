@@ -3,7 +3,6 @@ package com.devcareer.compass.application.resume.service
 import com.devcareer.compass.application.resume.dto.ResumeResponse
 import com.devcareer.compass.application.storage.FileStorageService
 import com.devcareer.compass.domain.resume.Resume
-import com.devcareer.compass.infrastructure.ai.ResumeAnalysisService
 import com.devcareer.compass.infrastructure.parsing.ResumeParsingService
 import com.devcareer.compass.infrastructure.persistence.resume.ResumeJpaRepository
 import com.devcareer.compass.presentation.exception.ResumeNotFoundException
@@ -20,7 +19,7 @@ class ResumeService(
     private val fileStorageService: FileStorageService,
     private val resumeParsingService: ResumeParsingService,
     private val objectMapper: ObjectMapper,
-    private val resumeAnalysisService: ResumeAnalysisService,
+
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -47,17 +46,9 @@ class ResumeService(
 
         try{
             val parsedData = resumeParsingService.parseResume(storedFile.filePath, storedFile.fileType)
-            val rawText = parsedData.rawText ?: throw Exception("텍스트 추출 실패")
-
-            //ai 분석
-            val aiAnalyzed = resumeAnalysisService.analyzeResume(parsedData.rawText)
-
-            //파싱 결과 Json 으로 변환
             val parsedJson = objectMapper.writeValueAsString(parsedData)
-
             savedResume.markAsParsed(parsedJson)
             resumeRepository.save(savedResume)
-
             logger.info("Resume parsed successfully: id=${savedResume.id}")
         }catch (e: Exception){
             logger.error("Resume parsing failed: id=${savedResume.id}", e)

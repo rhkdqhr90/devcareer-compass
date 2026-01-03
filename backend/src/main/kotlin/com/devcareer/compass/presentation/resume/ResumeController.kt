@@ -1,9 +1,12 @@
 package com.devcareer.compass.presentation.resume
 
 import com.devcareer.compass.application.common.ApiResponse
+import com.devcareer.compass.application.learning.dto.LearningRoadmap
+import com.devcareer.compass.application.learning.service.LearningRoadmapService
+import com.devcareer.compass.application.positioning.service.PositioningResult
+import com.devcareer.compass.application.positioning.service.ResumePositioningService
 import com.devcareer.compass.application.resume.dto.ResumeResponse
 import com.devcareer.compass.application.resume.service.ResumeService
-import com.devcareer.compass.infrastructure.ai.OllamaClient
 import com.devcareer.compass.presentation.exception.FileRequiredException
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -19,7 +22,8 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/api/resumes")
 class ResumeController(
     private val resumeService: ResumeService,
-    private val ollamaClient: OllamaClient
+    private val resumePositioningService: ResumePositioningService,
+    private val learningRoadmapService: LearningRoadmapService
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -46,9 +50,19 @@ class ResumeController(
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 
-    @GetMapping("/test-ollama")
-    fun testOllama(): ResponseEntity<ApiResponse<String>> {
-        val response = ollamaClient.chat("안녕하세요. 간단히 인사해주세요.")
-        return ResponseEntity.ok(ApiResponse.success(response))
+    @GetMapping("/{id}/positioning")
+    fun analyzePositioning(
+        @PathVariable id: Long
+    ): ResponseEntity<ApiResponse<PositioningResult>> {
+        val result = resumePositioningService.analyzePositioning(id)
+        return ResponseEntity.ok(ApiResponse.success(result))
+    }
+
+    @GetMapping("/{id}/roadmap")
+    fun getLearningRoadmap(
+        @PathVariable id: Long
+    ): ResponseEntity<ApiResponse<LearningRoadmap>> {
+        val roadmap = learningRoadmapService.generateRoadmap(id)
+        return ResponseEntity.ok(ApiResponse.success(roadmap))
     }
 }
